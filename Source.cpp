@@ -76,14 +76,6 @@ void declare() {
 	backGroundsprite.setTextureRect(IntRect(0, 0, 1920, 1080));
 	backGroundsprite.setColor(Color(255, 255, 255, 64));
 
-
-
-	backgr.loadFromFile("img/Back__Score.png"); 
-	backgr_score.setTexture(backgr);
-	backgr_score.setColor(Color(255, 255, 255, 64));
-	backgr_score.setPosition(Vector2f(896, 0));
-
-
 	dot.loadFromFile("img/dot.png");                              
 	dotSprite.setTexture(dot);
 
