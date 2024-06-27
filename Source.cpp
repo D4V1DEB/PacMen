@@ -130,7 +130,7 @@ void declare() {
 	text_score.setString("Puntuacion: ");  
 
 	text.setFont(fo);
-	text.setPosition(1400, 160); //1248
+	text.setPosition(1400, 160);
 	text.setFillColor(Color::Blue);
 	text.setStyle(Text::Bold);
 	text.setString(s);          
