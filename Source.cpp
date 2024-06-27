@@ -135,13 +135,13 @@ void declare() {
 	text_score.setFillColor(Color::White);
 	text_score.setStyle(Text::Bold);
 	text_score.setCharacterSize(80);
-	text_score.setString("Puntuacion: ");  //To print word "Score"
+	text_score.setString("Puntuacion: ");  
 
 	text.setFont(fo);
 	text.setPosition(1400, 160); //1248
 	text.setFillColor(Color::Blue);
 	text.setStyle(Text::Bold);
-	text.setString(s);                 //To print the score 
+	text.setString(s);          
 
 
 	control.setFont(fon);
@@ -366,7 +366,7 @@ void gamefn(int pacman_speed)
 
 			else
 			{
-				//if (!(xmod % 32) && !(ymod % 32))
+				
 				{
 					pacSprite.move(0, 0);
 					xx = yy = 0;
@@ -404,7 +404,7 @@ void gamefn(int pacman_speed)
 					if (pacx == j && pacy == i)
 					{
 						maze1[i][j] = 0;
-						score += 10;  //Abnb 
+						score += 10; 
 
 					}
 				}
@@ -417,7 +417,7 @@ void gamefn(int pacman_speed)
 					if (pacx == j && pacy == i)
 					{
 						maze1[i][j] = 0, fright = 1000;
-						score += 50;  //Abnb 
+						score += 50; 
 
 					}
 				}
@@ -462,7 +462,7 @@ void gamefn(int pacman_speed)
 		}
 		if (score >= 4500 && Abnb_check2 == false)
 		{
-			lives++;//Besh
+			lives++;
 			lives = min(lives, 5);
 			Abnb_check2 = true;
 
@@ -573,7 +573,7 @@ void startfn()
 
 			switch (event.type)
 			{
-				//---------------------(Control on Moving in The start Menu  )-------------------
+				
 			case Event::KeyReleased:
 
 				switch (event.key.code)
@@ -585,12 +585,12 @@ void startfn()
 				case Keyboard::Down:
 					menu.MoveDown();
 					break;
-					//----------------------------------(Control on The Return value )---------------------------
+					
 				case Keyboard::Return:
 
 					switch (menu.GetPressedItem())
 					{
-					case 0:                        // start game
+					case 0:                      
 						startScreen.close();
 						gamefn(2);
 						break;
@@ -600,11 +600,11 @@ void startfn()
 				}
 
 				break;
-				//---------------------------------------------------------------------------
+			
 			case Event::Closed:
 				startScreen.close();
 				break;
-				//---------------------------------------------------------------------------
+		
 			}
 		}
 
