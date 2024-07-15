@@ -4,8 +4,7 @@
 using namespace sf;
 using namespace std;
 
-class ghostmoving
-{
+class ghostmoving {
 public:
 	ghostmoving(int arr[][50], int a, int b,int ghostspeed);
 	
