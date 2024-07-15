@@ -16,10 +16,10 @@ LostWin lost_win;
 scoreboard score_board;
 int maze1[50][50];
 int dead = true;
-int score = 0;//Abnb
+int score = 0; 
 bool win=1;
-int lives = 3;//Abnb
-bool mood = false;   //Mood --> Chase
+int lives = 3; 
+bool mood = false; 
 bool Abnb_check1 = false;
 bool Abnb_check2 = false;
 string map_path = "maps/map1.txt";
@@ -28,10 +28,9 @@ int const cols = 28;
 int Dir = 0, cnt = 0, fright = 0;
 bool vary = 0, haha = 1;
 
-// inky--//
 int olix = 0, oliy = -2;
 int inky_cnt = 0;
-//------------//
+
 Texture backGround, pac, wall, blinky, dot, bigdot, pink;
 Sprite  backGroundsprite, pacSprite, wallSprite, blinkySprite, dotSprite, bigdotSprite, pinkSprite;
 
@@ -57,17 +56,12 @@ void gamefn(int pacman_speed);
 void scoreBoardfn();
 void draw_your_maze();
 
-//void Inky(Sprite& oli, int speed);
-
 void Return_game_to_the_start();
 int User_Check = 1;
-int main()
-{
+int main() {
 	 score = 0;
 	declare();
-	if (User_Check)////////////////score
-
-	{
+	if (User_Check) {
 		User_Check = 0;
 		enterusernamefn();
 		score_board.Save_Score_Board(0);
@@ -75,34 +69,33 @@ int main()
 	startfn();
 }
 
-void declare()
-{
+void declare() {
 	fstream inputStream;
 	inputStream.open(map_path);
 	for (int i = 0; i < rows; i++)
 		for (int j = 0; j < cols; j++)
 			inputStream >> maze1[i][j];
-
-	backGround.loadFromFile("img/startbackground.jpg");              // BackGround
+	//Background
+	backGround.loadFromFile("img/startbackground.jpg");
 	backGroundsprite.setTexture(backGround);
 	backGroundsprite.setTextureRect(IntRect(0, 0, 1920, 1080));
-	backGroundsprite.setColor(Color(255, 255, 255, 64)); //255 64
+	backGroundsprite.setColor(Color(255, 255, 255, 64));
 
 
 
-	backgr.loadFromFile("img/Back__Score.png");              // BackGround for score that exist in the right part of window 
+	backgr.loadFromFile("img/Back__Score.png"); 
 	backgr_score.setTexture(backgr);
 	backgr_score.setColor(Color(255, 255, 255, 64));
 	backgr_score.setPosition(Vector2f(896, 0));
 
-
-	dot.loadFromFile("img/dot.png");                                // dot
+	//Sonidos
+	dot.loadFromFile("img/dot.png");    
 	dotSprite.setTexture(dot);
 
-	eatdot.setBuffer(eatdotBuffer);							       // dot sound
+	eatdot.setBuffer(eatdotBuffer);		
 	eatdotBuffer.loadFromFile("effects/dot.wav");
 
-	eatbigdot.setBuffer(eatbigdotBuffer);                               // big dot sound
+	eatbigdot.setBuffer(eatbigdotBuffer);               
 	eatbigdotBuffer.loadFromFile("effects/bigdot.wav");
 
 	eatghost.setBuffer(eatghostbuffer);
@@ -114,49 +107,50 @@ void declare()
 	extralive.setBuffer(extralivebuffer);
 	extralivebuffer.loadFromFile("effects/pacman_extrapac.wav");
 
-	bigdot.loadFromFile("img/bigdot.png");                        // big dot
+	//Imagenes
+	bigdot.loadFromFile("img/bigdot.png");                        
 	bigdotSprite.setTexture(bigdot);
 
 
-	wall.loadFromFile("img/wall.jpg");                              // Wall
+	wall.loadFromFile("img/wall.jpg");                           
 	wallSprite.setTexture(wall);
 
-	pac.loadFromFile("img/sheet.png");                            // PacmMan
+	pac.loadFromFile("img/sheet.png");                      
 	pacSprite.setTexture(pac);
 	pacSprite.setPosition(Vector2f(448, 704));
 	pacSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	blinky.loadFromFile("img/g.png");                          // Blinky
+	blinky.loadFromFile("img/g.png");          //fantasma rojo 
 	blinkySprite.setTexture(blinky);
 	blinkySprite.setPosition(Vector2f(384, 416));
 	blinkySprite.setTextureRect(sf::IntRect(0, 0, 28, 28));
 
 
-	pink.loadFromFile("img/g3.png");
-	pinkSprite.setTexture(pink);									// pinky 
+	pink.loadFromFile("img/g3.png");       //fantasma rosa
+	pinkSprite.setTexture(pink);		
 	pinkSprite.setPosition(Vector2f(416, 416));
 	pinkSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	inky.loadFromFile("img/g1.png");
-	inkySprite.setTexture(inky);									// inky 
+	inky.loadFromFile("img/g1.png");        //fantasma naraja
+	inkySprite.setTexture(inky);			
 	inkySprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	inkySprite.setPosition(Vector2f(448, 416));
 
-	clyde.loadFromFile("img/g4.png");
-	clydeSprite.setTexture(clyde);									// clyde
+	clyde.loadFromFile("img/g4.png");   //fantasma celeste
+	clydeSprite.setTexture(clyde);				
 	clydeSprite.setPosition(Vector2f(480, 416));
 	clydeSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
 
-	///////////////////////////////////////// The Right part of the window 
+	//Derecha backgroudn score tipo de letra
 
-	if (!font.loadFromFile("font/prstartk.ttf"))
+	if (!font.loadFromFile("font/arial.ttf"))
 		cout << "Error" << endl;
 
-	if (!fon.loadFromFile("font/prstartk.ttf"))
+	if (!fon.loadFromFile("font/arial.ttf"))
 		cout << "Error" << endl;
 
-	if (!fo.loadFromFile("font/prstartk.ttf"))
+	if (!fo.loadFromFile("font/arial.ttf"))
 		cout << "Error" << endl;
 
 
@@ -165,13 +159,13 @@ void declare()
 	text_score.setFillColor(Color::White);
 	text_score.setStyle(Text::Bold);
 	text_score.setCharacterSize(80);
-	text_score.setString("Score : ");  //To print word "Score"
+	text_score.setString("Score : ");
 
 	text.setFont(fo);
-	text.setPosition(1400, 160); //1248
+	text.setPosition(1400, 160);
 	text.setFillColor(Color::Blue);
 	text.setStyle(Text::Bold);
-	text.setString(s);                 //To print the score 
+	text.setString(s); 
 
 
 	control.setFont(fon);
@@ -179,30 +173,30 @@ void declare()
 	control.setFillColor(Color::White);
 	control.setStyle(Text::Bold);
 	control.setCharacterSize(45);
-	control.setString("Controls ");
+	control.setString("Controles");
 
 	control1.setFont(font);
 	control1.setPosition(960, 480);
 	control1.setFillColor(Color::Green);
-	control1.setString("Arrow Keys For Pacman");
+	control1.setString("Teclas de Pacman");
 
 	control2.setFont(font);
 	control2.setPosition(960, 544);
 	control2.setFillColor(Color::Green);
-	control2.setString("P --> Pause/UnPause");
+	control2.setString("P --> Pausa/Despausa");
 
 	control3.setFont(font);
 	control3.setPosition(960, 608);
 	control3.setFillColor(Color::Green);
-	control3.setString("M --> Mute/UnMute Sound");
+	control3.setString("M --> Silencia/Normal");
 
 	control4.setFont(font);
 	control4.setPosition(960, 672);
 	control4.setFillColor(Color::Green);
-	control4.setString("Esc --> Exit ");
+	control4.setString("Esc --> Salir");
 
 
-	//------------------------------------------------------ lives --------
+	//Vidas
 
 	lives_pacman1.loadFromFile("img/live.png");
 	lives_pacman_sprite1.setTexture(lives_pacman1);
@@ -233,13 +227,11 @@ void declare()
 	lives_pacman_sprite5.setColor(Color::Yellow);
 	lives_pacman_sprite5.setPosition(Vector2f(864 + 64 * 5, 288));
 	lives_pacman_sprite5.setTextureRect(sf::IntRect(0, 0, 64, 64));
-	///////////////////////////////////////////////////////////////////
+
 }
-void enterusernamefn()
-{
-	RenderWindow username(VideoMode(1920, 1080), "Enter your name");
-	while (username.isOpen())
-	{
+void enterusernamefn() {
+	RenderWindow username(VideoMode(1920, 1080), "Nombre");
+	while (username.isOpen()) {
 		Event event;
 		while (username.pollEvent(event))
 			score_board.Keyboard_Handling(event, username);
@@ -247,24 +239,17 @@ void enterusernamefn()
 }
 
 
+struct Inky_Ghost {
 
-//-----------------------inky-----------------------------------------//
-struct Inky_Ghost
-{
-
-
-	int ghostx(Sprite & oli, int Next_Moving)
-	{
+	int ghostx(Sprite & oli, int Next_Moving) {
 		return (oli.getPosition().y + Next_Moving) / 32;
 	}
 
-	int ghosty(Sprite & oli, int Next_Moving)
-	{
+	int ghosty(Sprite & oli, int Next_Moving) {
 		return (oli.getPosition().x + Next_Moving) / 32;
 	}
 
-	void Inky(Sprite & oli, int speed)
-	{
+	void Inky(Sprite & oli, int speed) {
 
 		inky_cnt++;
 		if (inky_cnt % 5 == 0)
@@ -274,74 +259,62 @@ struct Inky_Ghost
 
 		int currX = oli.getPosition().y, currY = oli.getPosition().x;
 
-		if ((maze1[x][y] == 1 || cnt % 25 == 0) && ((currX % 32 == 0) && (currY % 32 == 0)))
-		{
+		if ((maze1[x][y] == 1 || cnt % 25 == 0) && ((currX % 32 == 0) && (currY % 32 == 0))) {
 
 
-			if ((olix > 0 || olix < 0) && oliy == 0) //right and left
-			{
-				if (haha)
-				{
-					if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //up
+			if ((olix > 0 || olix < 0) && oliy == 0) { //derechas y izquierda
+				if (haha) {
+					if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //arriba
 						olix = 0, oliy = -speed;
 
-					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // down
+					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // abajo
 						olix = 0, oliy = speed;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //right
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) // derecha
 						olix = speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //left
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) // izquierda
 						olix = -speed, oliy = 0;
 
-				}
-				else
-				{
-					if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // down
+				} else {
+					if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // abajo
 						olix = 0, oliy = speed;
 
-					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //up
+					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //arriba
 						olix = 0, oliy = -speed;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //left
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //izquierda
 						olix = -speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //right
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //derecha
 						olix = speed, oliy = 0;
 
 				}
-			}
-			else if ((oliy > 0 || oliy < 0) && olix == 0)  // up and down	
-			{
-				if (haha)
-
-				{
-					if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //right
+			} else if ((oliy > 0 || oliy < 0) && olix == 0) { //arriba y abajo
+				if (haha) {
+					if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //derecha
 						olix = speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //left
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //izquierda
 						olix = -speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //up
+					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //arriba
 						olix = 0, oliy = -speed;
 
-					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // down
+					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // abajo
 						olix = 0, oliy = speed;
+				} else {
 
-				}
-				else
-				{
-
-					if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //left
+					if (maze1[ghostx(oli, 0)][ghosty(oli, -32)] != 1) //izquierda
 						olix = -speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //right
+					else if (maze1[ghostx(oli, 0)][ghosty(oli, 32)] != 1) //derecha
 						olix = speed, oliy = 0;
 
-					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) // down
+					else if (maze1[ghostx(oli, 32)][ghosty(oli, 0)] != 1) //abajo
 						olix = 0, oliy = speed;
 
-					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //up
+					else if (maze1[ghostx(oli, -32)][ghosty(oli, 0)] != 1) //arriba
 						olix = 0, oliy = -speed;
 
 				}
@@ -356,22 +329,17 @@ struct Inky_Ghost
 	}
 };
 
-void startfn()
-{
+void startfn() {
 
 	RenderWindow startScreen(sf::VideoMode(1920, 1080), "Pacman", Style::Close | Style::Resize);
 	Menu menu(startScreen.getSize().x, startScreen.getSize().y);
-	while (startScreen.isOpen())
-	{
+	while (startScreen.isOpen()) {
 
 		Event event;
 
-		while (startScreen.pollEvent(event))
-		{
+		while (startScreen.pollEvent(event)) {
 
-			switch (event.type)
-			{
-				//---------------------(Control on Moving in The start Menu  )-------------------
+			switch (event.type) { //Movimiento en el menu
 			case Event::KeyReleased:
 
 				switch (event.key.code)
@@ -383,28 +351,28 @@ void startfn()
 				case Keyboard::Down:
 					menu.MoveDown();
 					break;
-					//----------------------------------(Control on The Return value )---------------------------
+
 				case Keyboard::Return:
 
 					switch (menu.GetPressedItem())
 					{
-					case 0:                        // start game
+					case 0:                        // Iniciar Juego
 						startScreen.close();
 						gamefn(2);
 						break;
 
 					case 1:
-						startScreen.close();      // open setting
+						startScreen.close();      // Score
 						scoreBoardfn();
 						break;
 
 					case 2:
 						startScreen.close();
-						draw_your_maze();                // maze 
+						draw_your_maze();                // Dibuja el Mapa
 						break;
 
 					case 3:
-						exit(0);                 // exit game 
+						exit(0);                 // Salir
 						break;
 					}
 
@@ -412,11 +380,11 @@ void startfn()
 				}
 
 				break;
-				//---------------------------------------------------------------------------
+
 			case Event::Closed:
 				startScreen.close();
 				break;
-				//---------------------------------------------------------------------------
+				
 			}
 		}
 
@@ -428,8 +396,8 @@ void startfn()
 	}
 
 }
-int pac_diffPOS(int Next_moving)
-{
+
+int pac_diffPOS(int Next_moving) {
 	int Next_tile = 0;
 	if (Next_moving > 0)  Next_tile = 32;
 	else if (Next_moving < 0)  Next_tile = -32;
@@ -438,8 +406,7 @@ int pac_diffPOS(int Next_moving)
 	return Next_tile;
 }
 
-void gamefn(int pacman_speed)
-{
+void gamefn(int pacman_speed) {
 
 	Return_game_to_the_start();
 	RenderWindow pacman(VideoMode(1920, 1080), "Pacman");
@@ -449,25 +416,19 @@ void gamefn(int pacman_speed)
 	ghostmoving blinky(maze1, cols, rows, 2);
 	ShortestRandom pinky(maze1, cols, rows, 2);
 	Besh_Random inky, clyde;
-	Inky_Ghost ink; // struct
+	Inky_Ghost ink; 
 	int xx = 0, yy = 0;
-	//pacman.setFramerateLimit(100);
-	// Besh
+
 	bool move_ch = 1; int Besh_x = 0, Besh_y = 0 ;
-	while (pacman.isOpen())
-	{
+	while (pacman.isOpen()) {
 		score_board.Save_Score_Board(score);
-		//Abnb
-		if (pacSprite.getGlobalBounds().intersects(blinkySprite.getGlobalBounds()))
-		{
-			if (!fright)      //Mood --> Chase  
-			{
+
+		if (pacSprite.getGlobalBounds().intersects(blinkySprite.getGlobalBounds())) {
+			if (!fright) {
 				lives--;
 				lost_win.soundlost();
 				Return_game_to_the_start();
-			}
-			else
-			{
+			} else {
 				blinkySprite.setPosition(Vector2f(384, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
@@ -475,51 +436,36 @@ void gamefn(int pacman_speed)
 				sleep(seconds(1));
 			}
 
-		}
-		if (pacSprite.getGlobalBounds().intersects(pinkSprite.getGlobalBounds()))
-		{
-			if (!fright)     //Mood --> Chase 
-			{
+		} if (pacSprite.getGlobalBounds().intersects(pinkSprite.getGlobalBounds())) {
+			if (!fright) {
 				lives--;
 				lost_win.soundlost();
 				Return_game_to_the_start();
-			}
-			else
-			{
+			} else {
 				pinkSprite.setPosition(Vector2f(416, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
 				score += 200;
 				sleep(seconds(1));
 			}
-		}
-		if (pacSprite.getGlobalBounds().intersects(inkySprite.getGlobalBounds()))
-		{
-			if (!fright)      //Mood --> Chase 
-			{
+		} if (pacSprite.getGlobalBounds().intersects(inkySprite.getGlobalBounds())) {
+			if (!fright) {
 				lives--;
 				lost_win.soundlost();
 				Return_game_to_the_start();
-			}
-			else
-			{
+			} else {
 				inkySprite.setPosition(Vector2f(448, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
 				score += 200;
 				sleep(seconds(1));
 			}
-		}
-		if (pacSprite.getGlobalBounds().intersects(clydeSprite.getGlobalBounds()))
-		{
-			if (!fright)      //Mood --> Chase 
-			{
+		} if (pacSprite.getGlobalBounds().intersects(clydeSprite.getGlobalBounds())) {
+			if (!fright) {
 				lives--;
 				lost_win.soundlost();
 				Return_game_to_the_start();
-			}
-			else
-			{
+			} else {
 				clydeSprite.setPosition(Vector2f(480, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 				eatghost.play();
@@ -528,8 +474,7 @@ void gamefn(int pacman_speed)
 			}
 		}
 
-		if (!lives)	//Besh
-		{
+		if (!lives) {
 			RenderWindow lost(VideoMode(1920, 1080), "Oops !");
 			lost_win.soundlost();
 			lost_win.lost(lost);
@@ -545,15 +490,12 @@ void gamefn(int pacman_speed)
 
 		cnt = (cnt + 1) % 21;
 
-
 		s = to_string(score);
 		text.setString(s);
 
 		Event event;
-		while (pacman.pollEvent(event))
-		{
-			if (event.type == Event::Closed)
-			{
+		while (pacman.pollEvent(event)) {
+			if (event.type == Event::Closed) {
 				pacman.close();
 				main();
 			}
@@ -570,9 +512,8 @@ void gamefn(int pacman_speed)
 				pacman.close();
 				main();
 			}
-			//Besh
-			if (move_ch)
-			{
+			
+			if (move_ch) {
 				Besh_x = xx;
 				Besh_y = yy;
 				move_ch = 0;
@@ -589,8 +530,7 @@ void gamefn(int pacman_speed)
 		int xmod = pacSprite.getPosition().y, ymod = pacSprite.getPosition().x;
 
 
-		if (!(xmod % 32) && !(ymod % 32))
-		{
+		if (!(xmod % 32) && !(ymod % 32)) {
 
 			if (maze1[x][y] != 1) {
 				pacSprite.move(xx, yy), Besh_x = xx, Besh_y = yy;
@@ -598,17 +538,15 @@ void gamefn(int pacman_speed)
 			}
 
 
-			else if (maze1[Besh_getx][Besh_gety] != 1)
-			{
+			else if (maze1[Besh_getx][Besh_gety] != 1) {
 
 				pacSprite.move(Besh_x, Besh_y);
 
 				detectdirection(Besh_x, Besh_y);
 			}
 
-			else
-			{
-				//if (!(xmod % 32) && !(ymod % 32))
+			else {
+				
 				{
 					pacSprite.move(0, 0);
 					xx = yy = 0;
@@ -630,40 +568,34 @@ void gamefn(int pacman_speed)
 
 		win = true;
 		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < cols; j++)
-			{
+			for (int j = 0; j < cols; j++) {
 				int pacx = pacSprite.getPosition().x / 32, pacy = pacSprite.getPosition().y / 32;
-				if (maze1[i][j] == 1)
-				{
+				if (maze1[i][j] == 1) {
 					wallSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					wallSprite.setPosition(j * 32, i * 32);
 					pacman.draw(wallSprite);
 				}
-				else if (maze1[i][j] == 2)
-				{
+				else if (maze1[i][j] == 2) {
 					win = false;
 					dotSprite.setTextureRect(IntRect(0, 0, 16, 16));
 					dotSprite.setColor(Color::Red);
 					dotSprite.setPosition(j * 32 + 8, i * 32 + 8);
 					pacman.draw(dotSprite);
-					if (pacx == j && pacy == i)
-					{
+					if (pacx == j && pacy == i) {
 						maze1[i][j] = 0;
-						score += 10;  //Abnb 
+						score += 10; 
 						if (eatdot.getStatus() == Music::Status::Stopped)
 							eatdot.play();
 					}
 				}
-				else if (maze1[i][j] == 3)
-				{
+				else if (maze1[i][j] == 3) {
 					win = false;
 					bigdotSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					bigdotSprite.setPosition(j * 32, i * 32);
 					pacman.draw(bigdotSprite);
-					if (pacx == j && pacy == i)
-					{
+					if (pacx == j && pacy == i) {
 						maze1[i][j] = 0, fright = 1000;
-						score += 50;  //Abnb 
+						score += 50;  
 						if (eatbigdot.getStatus() == Music::Status::Stopped)
 							eatbigdot.play();
 					}
@@ -671,26 +603,17 @@ void gamefn(int pacman_speed)
 
 			}
 
-		/*
-		Besh
-		*/
-		// move to next level || end
-		if (win==true)
-		{
+		if (win==true) {
 			sleep(seconds(1));
 
-			if (map_path[8] < '3')
-			{
+			if (map_path[8] < '3') {
 				map_path[8]++;
 				declare();
 				pacman.close();
 				gamefn(2);
 				
-			}
-
-			else
-			{
-				RenderWindow win(VideoMode(1920, 1080), "Congratulations !");
+			} else {
+				RenderWindow win(VideoMode(1920, 1080), "Felicitaciones !");
 				lost_win.winningsound();
 				lost_win.win(win);
 				win.display();
@@ -701,17 +624,13 @@ void gamefn(int pacman_speed)
 				declare();
 
 			}
-		}
-		if (score >= 2000 && Abnb_check1 == false)
-		{
+		} if (score >= 2000 && Abnb_check1 == false) {  //vidas cada cierto puntaje
 			lives++;
-			lives = min(lives, 5); //Besh
+			lives = min(lives, 5);
 			Abnb_check1 = true;
 			extralive.play();
-		}
-		if (score >= 4500 && Abnb_check2 == false)
-		{
-			lives++;//Besh
+		} if (score >= 4500 && Abnb_check2 == false) {
+			lives++;
 			lives = min(lives, 5);
 			Abnb_check2 = true;
 			extralive.play();
@@ -741,8 +660,7 @@ void gamefn(int pacman_speed)
 		if (lives >= 5)
 			pacman.draw(lives_pacman_sprite5);
 		pacman.display();
-		if (dead)
-		{
+		if (dead) {
 			startsound.play();
 			sleep(seconds(4));
 			dead = false;
@@ -750,20 +668,16 @@ void gamefn(int pacman_speed)
 	}
 }
 
-void scoreBoardfn()//////////////////////////////////////////score
-{
-	RenderWindow Score_Screen(sf::VideoMode(1920, 1080), "Score Board");
+void scoreBoardfn() {
+	RenderWindow Score_Screen(sf::VideoMode(1920, 1080), "Score");
 	scoreboard sb;
-	while (Score_Screen.isOpen())
-	{
+	while (Score_Screen.isOpen()) {
 		Event event;
-		while (Score_Screen.pollEvent(event))
-		{
+		while (Score_Screen.pollEvent(event)) {
 			if (event.type == Event::Closed)
 				Score_Screen.close();
 
-			else if (event.text.unicode == 27) //27 Esc button
-			{
+			else if (event.text.unicode == 27) { //Esc Salir
 				Score_Screen.close();
 				startfn();
 				break;
@@ -774,10 +688,10 @@ void scoreBoardfn()//////////////////////////////////////////score
 		Score_Screen.display();
 	}
 }
-void draw_your_maze()
-{
+
+void draw_your_maze() {
 	Return_game_to_the_start();
-	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Draw Your Maze");
+	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Dibuja tu mapa");
 
 	int drawmaze[50][50] = {};
 	fstream inputStream;
@@ -791,18 +705,12 @@ void draw_your_maze()
 	Sprite sprite(textur);
 	sprite.setPosition(896, 0);
 
-
-	//--------------------------//
-
-	while (window.isOpen())
-	{
+	while (window.isOpen()) {
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
+		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (Keyboard::isKeyPressed(Keyboard::P))
-			{
+			if (Keyboard::isKeyPressed(Keyboard::P)) {
 				ofstream outfile;
 				outfile.open("filename.txt", ios::out);
 				outfile.clear();
@@ -813,14 +721,10 @@ void draw_your_maze()
 				}
 				outfile.close();
 				cout << "done";
-			}
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
+			} if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				window.close();
 				startfn();
-			}
-			if (Keyboard::isKeyPressed(Keyboard::Enter))
-			{
+			} if (Keyboard::isKeyPressed(Keyboard::Enter)) {
 				for (int i = 0; i < rows; i++)
 					for (int j = 0; j < cols; j++)
 						maze1[i][j] = drawmaze[i][j];
@@ -831,8 +735,7 @@ void draw_your_maze()
 		}
 
 		int b = Mouse::getPosition(window).x / 32, a = Mouse::getPosition(window).y / 32;
-		if (drawmaze[a][b] != 4 && drawmaze[a][b] != 6 && a != 0 && b != 0 && a != 27 && b != 27)
-		{
+		if (drawmaze[a][b] != 4 && drawmaze[a][b] != 6 && a != 0 && b != 0 && a != 27 && b != 27) {
 			if (Keyboard::isKeyPressed(Keyboard::D))
 				drawmaze[a][b] = 2;
 			else if (Keyboard::isKeyPressed(Keyboard::B))
@@ -842,26 +745,20 @@ void draw_your_maze()
 			else if (Keyboard::isKeyPressed(Keyboard::S))
 				drawmaze[a][b] = 0;
 		}
+		
 		window.clear();
 		for (int i = 0; i < rows; i++)
-			for (int j = 0; j < cols; j++)
-			{
-
-				if (drawmaze[i][j] == 1)
-				{
+			for (int j = 0; j < cols; j++) {
+				if (drawmaze[i][j] == 1) {
 					wallSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					wallSprite.setPosition(j * 32, i * 32);
 					window.draw(wallSprite);
-				}
-				else if (drawmaze[i][j] == 2)
-				{
+				} else if (drawmaze[i][j] == 2) {
 					dotSprite.setTextureRect(IntRect(0, 0, 16, 16));
 					dotSprite.setColor(Color::Red);
 					dotSprite.setPosition(j * 32 + 8, i * 32 + 8);
 					window.draw(dotSprite);
-				}
-				else if (drawmaze[i][j] == 3)
-				{
+				} else if (drawmaze[i][j] == 3) {
 					bigdotSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					bigdotSprite.setPosition(j * 32, i * 32);
 					window.draw(bigdotSprite);
@@ -878,13 +775,12 @@ void draw_your_maze()
 
 	}
 }
-void playeranimation(int dir, int cnt)
-{
+
+void playeranimation(int dir, int cnt) {
 	pacSprite.setTextureRect(IntRect(cnt/3 * 32, dir * 32, 32, 32));
 }
 
-void detectdirection(int x, int y)
-{
+void detectdirection(int x, int y) {
 	if (x == 2)
 		Dir = 0;
 	if (x == -2)
@@ -894,8 +790,8 @@ void detectdirection(int x, int y)
 	if (y == -2)
 		Dir = 3;
 }
-void Return_game_to_the_start()
-{
+
+void Return_game_to_the_start() {
 	dead = true;
 	pacSprite.setPosition(Vector2f(448, 704));
 
@@ -911,17 +807,13 @@ void Return_game_to_the_start()
 
 }
 
-void frightmode(int x)
-{
-	if (x)
-	{
+void frightmode(int x) {
+	if (x) {
 		blinky.loadFromFile("img/fright.png");
 		pink.loadFromFile("img/fright.png");
 		inky.loadFromFile("img/fright.png");
 		clyde.loadFromFile("img/fright.png");
-	}
-	else
-	{
+	} else {
 		blinky.loadFromFile("img/g.png");
 		pink.loadFromFile("img/g3.png");
 		inky.loadFromFile("img/g1.png");
