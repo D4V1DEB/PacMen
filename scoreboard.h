@@ -3,8 +3,7 @@
 #include <fstream>
 using namespace std;
 using namespace sf;
-class scoreboard
-{
+class scoreboard {
 public:
 	scoreboard();
 
