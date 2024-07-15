@@ -11,10 +11,11 @@ ghostmoving::ghostmoving(int arr[][50] , int a , int b , int ghostspeed) {
 	speed = ghostspeed;
 	width = a;
 	height = b;
-	go[0] = 1;	
-	go[1] = -1;	
-	go[2] = width;	 
-	go[3] = -width;  
+	go[0] = 1;	     // derecha
+	go[1] = -1;          // izquierda
+	go[2] = width;	     // abajo
+	go[3] = -width;      // arriba
+	
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			if (arr[i][j] == 1)
@@ -23,8 +24,7 @@ ghostmoving::ghostmoving(int arr[][50] , int a , int b , int ghostspeed) {
 			for (int k = 0; k < 4; k++)  {
 				int to = from + go[k];
 
-				if (to < 0 || to/width >= height || ( to % width==0 && k==1) || (to%width==width-1 &&k==0) 
-					                                                         || arr[to/width][to%width]==1 )
+				if (to < 0 || to/width >= height || ( to % width==0 && k==1) || (to%width==width-1 &&k==0) || arr[to/width][to%width]==1 )
 					continue;
 
 				edge[from].push_back(to);
@@ -69,6 +69,7 @@ Sprite ghostmoving::findpath(Sprite player, Sprite ghost) {
 			}
 		}
 	}
+	
 	int aa = ghost.getPosition().x, bb = ghost.getPosition().y;
 
 	if (player.getPosition().x == ghost.getPosition().x && player.getPosition().y== ghost.getPosition().y
@@ -76,7 +77,7 @@ Sprite ghostmoving::findpath(Sprite player, Sprite ghost) {
 		xx = 0, yy = 0;
 	else {
 
-		if (path[to] != 0 && (aa / 32 * 32 == aa) && (bb / 32 * 32 == bb)) {
+		if (path[to] != 0 && (aa / 32 * 32 == aa) && (bb / 32 * 32 == bb))  {
 			
 			int x = path[to];
 			int d = x - to;
