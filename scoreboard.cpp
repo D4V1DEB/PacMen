@@ -2,13 +2,13 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
-#include <iomanip> // setw
+#include <iomanip>
 #include <stdlib.h>
 #include <string>
 #include <algorithm>
 #include <fstream>
-#include <functional>   // std::greater
-#include <ostream>      // std::flush
+#include <functional>   
+#include <ostream>   
 using namespace std;
 using namespace sf;
 
@@ -16,10 +16,12 @@ using namespace sf;
 scoreboard::scoreboard() {
 	scoreIn.open("Score/Score.txt");
 	
+	//--------- Score en el txt--------------------//
 	if (scoreIn.fail()) {
-		cerr << "Error al abrir el archivo\n";
+		cerr << "Error al abrir el txt\n";
 		exit(1);
 	}
+
 	while (!scoreIn.eof()) {
 		pair<string, int > name_and_score;
 		scoreIn >> name_and_score.first;
@@ -29,11 +31,13 @@ scoreboard::scoreboard() {
 		scoreIn>> name_and_score.second;
 		if(scoreIn.fail())
 			scoreIn >> name_and_score.second;
+			
 		Score[name_and_score.first] = name_and_score.second;
 
 	}
 	scoreIn.close();
 
+	//----------------- Ascender en el score si superamos puntaje---------------//
 
 	size = Score.size();
 	it = Score.begin();
@@ -46,7 +50,6 @@ scoreboard::scoreboard() {
 	Score.clear();
 	for (int i=0 ; i<size ;  i++) {
 		Score[Sorted_Score[i].second] = Sorted_Score[i].first;
-
 	}
 }
 
@@ -80,10 +83,11 @@ void scoreboard::Keyboard_Handling(Event& event, RenderWindow& window) {
 			window.close();
 		}
 	}
-		Text_Style(User_Name, 250,400, "Nombre:   ", Color::Yellow, 60);
+	
+		Text_Style(User_Name, 250,400, "Nombre:  ", Color::Yellow, 60);
 		Text_Style(User_Input, 650, 400 , sentence, Color::White, 55);
 		User_Input.setString(sentence);
-		User_Name.setString("Nombre:   ");
+		User_Name.setString("Nombre:  ");
 		window.clear();
 	window.draw(User_Name);
 	window.draw(User_Input);
@@ -94,7 +98,7 @@ void scoreboard::Keyboard_Handling(Event& event, RenderWindow& window) {
 void scoreboard::Print_Score_Board(RenderWindow& window) {
 	float x = 600.0, y = 0;
 
-	Text_Style(Desplay_Score_Word, x, y, "Puntuacion", Color::White, 100);
+	Text_Style(Desplay_Score_Word, x, y, "Score", Color::White, 100);
 
 	x = 470.0; y = 120.0;
 	window.draw(Desplay_Score_Word);
@@ -120,8 +124,7 @@ void scoreboard :: Save_Score_Board(int finale_score) {
 
 	scoreOut.clear();
 	it = Score.begin();
-	for (; it != Score.end(); it++)
-	{
+	for (; it != Score.end(); it++) {
 		scoreOut << it->first << " " << it->second << " ";
 	}
 	scoreOut.close();
