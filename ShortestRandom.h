@@ -3,8 +3,7 @@
 using namespace sf;
 using namespace std;
 
-class ShortestRandom
-{
+class ShortestRandom {
 public:
 	ShortestRandom(int arr[][50], int a, int b, int ghostspeed);
 	Sprite findpath(Sprite player, Sprite ghost);
