@@ -3,8 +3,7 @@
 #include <SFML/Audio.hpp>
 using namespace std;
 using namespace sf;
-class LostWin
-{
+class LostWin {
 public:
 
 	LostWin();
