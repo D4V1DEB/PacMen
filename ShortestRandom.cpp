@@ -11,10 +11,11 @@ ShortestRandom::ShortestRandom(int arr[][50], int a, int b, int ghostspeed) {
 	speed = ghostspeed;
 	width = a;
 	height = b;
-	go[0] = 1;	       // right
-	go[1] = -1;           // left
-	go[2] = width;	     // down
-	go[3] = -width;     // up
+	go[0] = 1;		// derecha
+	go[1] = -1;		// izquierda
+	go[2] = width;	     // abajo
+	go[3] = -width;      // arriba
+	
 	for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 
@@ -26,8 +27,7 @@ ShortestRandom::ShortestRandom(int arr[][50], int a, int b, int ghostspeed) {
 			for (int k = 0; k < 4; k++) {
 				int to = from + go[k];
 
-				if (to < 0 || to / width >= height || (to % width == 0 && k == 1) || (to % width == width - 1 && k == 0)
-					|| arr[to / width][to % width] == 1)
+				if (to < 0 || to / width >= height || (to % width == 0 && k == 1) || (to % width == width - 1 && k == 0) || arr[to / width][to % width] == 1)
 					continue;
 
 				edge[from].push_back(to);
@@ -123,7 +123,7 @@ void ShortestRandom::pinky_ran_move(Sprite & pink) {
 	ran = rand() % 3;
 
 	if ((maze[pinky_x][pinky_y] == 1 || cn % 20 == 0) && !(xmod % 32) && !(ymod % 32)) {
-		if ((ghostx > 0 || ghostx < 0) && !ghosty) {  // derecha o izquierda 
+		if ((ghostx > 0 || ghostx < 0) && !ghosty) { // derecha o izquierda
 			if (vary) {
 				if (maze[p_x(-32, pink)][p_y(0, pink)] != 1) // arriba
 					ghostx = 0, ghosty = -speed;
@@ -131,12 +131,14 @@ void ShortestRandom::pinky_ran_move(Sprite & pink) {
 				else if (maze[p_x(32, pink)][p_y(0, pink)] != 1) // abajo
 					ghostx = 0, ghosty = speed;
 
-				else if (maze[p_x(0, pink)][p_y(32, pink)] != 1) // derecha
+				else if (maze[p_x(0, pink)][p_y(32, pink)] != 1) // recha
 					ghostx = speed, ghosty = 0;
 
 				else if (maze[p_x(0, pink)][p_y(-32, pink)] != 1) // izquierda
 					ghostx = -speed, ghosty = 0;
-			} else {
+			}
+
+			else {
 				if (maze[p_x(32, pink)][p_y(0, pink)] != 1) // abajo
 					ghostx = 0, ghosty = speed;
 
@@ -152,8 +154,7 @@ void ShortestRandom::pinky_ran_move(Sprite & pink) {
 			}
 		}
 
-		else if (!ghostx && (ghosty > 0 || ghosty < 0)) {  // abajo o arriba
-
+		else if (!ghostx && (ghosty > 0 || ghosty < 0)) { // abajo o arriba
 			if (vary) {
 				if (maze[p_x(0, pink)][p_y(-32, pink)] != 1) // izquierda
 					ghostx = -speed, ghosty = 0;
@@ -166,7 +167,9 @@ void ShortestRandom::pinky_ran_move(Sprite & pink) {
 
 				else if (maze[p_x(32, pink)][p_y(0, pink)] != 1) // abajo
 					ghostx = 0, ghosty = speed;
-			} else {
+			}
+
+			else {
 				if (maze[p_x(0, pink)][p_y(32, pink)] != 1) // derecha
 					ghostx = speed, ghosty = 0;
 
