@@ -13,7 +13,7 @@ LostWin::LostWin() {
 	winsound.setBuffer(winbuffer);
 	winbuffer.loadFromFile("effects/win.wav");
 	
-	font.loadFromFile("font/Heavy-Metal-Rocking.ttf");
+	font.loadFromFile("font/prstartk.ttf");
 
 	losttext.setFont(font);
 	losttext.setString("Perdiste");
