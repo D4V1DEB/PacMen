@@ -31,10 +31,10 @@ bool vary = 0, haha = 1;
 int olix = 0, oliy = -2;
 int inky_cnt = 0;
 
-Texture backGround, pac, wall, blinky, dot, bigdot, pink;
-Sprite  backGroundsprite, pacSprite, wallSprite, blinkySprite, dotSprite, bigdotSprite, pinkSprite;
+Texture backGround, pac, wall, blinkyTexture, dot, bigdot, pinkyTexture;
+Sprite  backGroundsprite, pacSprite, wallSprite, blinkySprite, dotSprite, bigdotSprite, pinkySprite;
 
-Texture backgr, lives_pacman1, lives_pacman2, lives_pacman3, lives_pacman4, lives_pacman5, inky, clyde;
+Texture backgr, lives_pacman1, lives_pacman2, lives_pacman3, lives_pacman4, lives_pacman5, inkyTexture, clydeTexture;
 Sprite  backgr_score, lives_pacman_sprite1, lives_pacman_sprite2, lives_pacman_sprite3, lives_pacman_sprite4, lives_pacman_sprite5, inkySprite, clydeSprite;
 
 Sound eatdot, eatbigdot ,eatghost , startsound ,extralive;
@@ -43,6 +43,7 @@ SoundBuffer eatdotBuffer, eatbigdotBuffer , eatghostbuffer , startsoundbuffer , 
 
 Text  text_score, text, control, control1, control2, control3, control4;
 Font font, fon, fo;
+
 string s;
 void declare();
 void detectdirection(int x, int y);
@@ -120,24 +121,24 @@ void declare() {
 	pacSprite.setPosition(Vector2f(448, 704));
 	pacSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	blinky.loadFromFile("img/g.png");          //fantasma rojo 
-	blinkySprite.setTexture(blinky);
+	blinkyTexture.loadFromFile("img/g.png");          //fantasma rojo 
+	blinkySprite.setTexture(blinkyTexture);
 	blinkySprite.setPosition(Vector2f(384, 416));
 	blinkySprite.setTextureRect(sf::IntRect(0, 0, 28, 28));
 
 
-	pink.loadFromFile("img/g3.png");       //fantasma rosa
-	pinkSprite.setTexture(pink);		
-	pinkSprite.setPosition(Vector2f(416, 416));
-	pinkSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+	pinkyTexture.loadFromFile("img/g3.png");       //fantasma rosa
+	pinkySprite.setTexture(pinkyTexture);		
+	pinkySprite.setPosition(Vector2f(416, 416));
+	pinkySprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
-	inky.loadFromFile("img/g1.png");        //fantasma naraja
-	inkySprite.setTexture(inky);			
+	inkyTexture.loadFromFile("img/g1.png");        //fantasma naraja
+	inkySprite.setTexture(inkyTexture);			
 	inkySprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	inkySprite.setPosition(Vector2f(448, 416));
 
-	clyde.loadFromFile("img/g4.png");   //fantasma celeste
-	clydeSprite.setTexture(clyde);				
+	clydeTexture.loadFromFile("img/g4.png");   //fantasma celeste
+	clydeSprite.setTexture(clydeTexture);				
 	clydeSprite.setPosition(Vector2f(480, 416));
 	clydeSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 
@@ -436,13 +437,13 @@ void gamefn(int pacman_speed) {
 				sleep(seconds(1));
 			}
 
-		} if (pacSprite.getGlobalBounds().intersects(pinkSprite.getGlobalBounds())) {
+		} if (pacSprite.getGlobalBounds().intersects(pinkySprite.getGlobalBounds())) {
 			if (!fright) {
 				lives--;
 				lost_win.soundlost();
 				Return_game_to_the_start();
 			} else {
-				pinkSprite.setPosition(Vector2f(416, 416));
+				pinkySprite.setPosition(Vector2f(416, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
 				score += 200;
@@ -561,7 +562,7 @@ void gamefn(int pacman_speed) {
 			fright--;
 		frightmode(fright);
 		blinkySprite = blinky.findpath(pacSprite, blinkySprite);
-		pinky.short_with_tiles(pacSprite, pinkSprite);
+		pinky.short_with_tiles(pacSprite, pinkySprite);
 		ink.Inky(inkySprite, 2);
 		clyde.pinky_ran_move(clydeSprite, maze1, 2);
 
@@ -637,7 +638,7 @@ void gamefn(int pacman_speed) {
 		}
 
 		pacman.draw(blinkySprite);
-		pacman.draw(pinkSprite);
+		pacman.draw(pinkySprite);
 		pacman.draw(inkySprite);
 		pacman.draw(clydeSprite);
 		pacman.draw(pacSprite);
@@ -766,7 +767,7 @@ void draw_your_maze() {
 			}
 
 		window.draw(blinkySprite);
-		window.draw(pinkSprite);
+		window.draw(pinkySprite);
 		window.draw(inkySprite);
 		window.draw(clydeSprite);
 		window.draw(pacSprite);
@@ -797,7 +798,7 @@ void Return_game_to_the_start() {
 
 	blinkySprite.setPosition(Vector2f(384, 416));
 
-	pinkSprite.setPosition(Vector2f(416, 416));
+	pinkySprite.setPosition(Vector2f(416, 416));
 
 	inkySprite.setPosition(Vector2f(448, 416));
 
@@ -807,16 +808,33 @@ void Return_game_to_the_start() {
 
 }
 
-void frightmode(int x) {
-	if (x) {
-		blinky.loadFromFile("img/fright.png");
-		pink.loadFromFile("img/fright.png");
-		inky.loadFromFile("img/fright.png");
-		clyde.loadFromFile("img/fright.png");
-	} else {
-		blinky.loadFromFile("img/g.png");
-		pink.loadFromFile("img/g3.png");
-		inky.loadFromFile("img/g1.png");
-		clyde.loadFromFile("img/g4.png");
+class FrightModeDecorator{
+public:
+	FrightModeDecorator(){
+		frightTexture.loadFromFile("img/fright.png");
+		normalTextures[0].loadFromFile("img/g.png");
+		normalTextures[1].loadFromFile("img/g3.png");
+		normalTextures[2].loadFromFile("img/g1.png");
+		normalTextures[3].loadFromFile("img/g4.png");
 	}
+	
+	void setFrightMode(Sprite& sprite, bool frightMode, int ghostIndex){
+		if (frightMode){
+			sprite.setTexture(frightTexture);
+		} else {
+			sprite.setTexture(normalTextures[ghostIndex]);
+		}
+	}
+private:
+	Texture frightTexture;
+	Texture normalTextures[4];
+};
+
+FrightModeDecorator frightModeDecorator;		
+		
+void frightmode(int x) {
+	frightModeDecorator.setFrightMode(blinkySprite, x, 0);
+	frightModeDecorator.setFrightMode(pinkySprite, x, 1);
+	frightModeDecorator.setFrightMode(inkySprite, x, 2);
+	frightModeDecorator.setFrightMode(clydeSprite, x, 3);
 }
