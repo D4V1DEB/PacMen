@@ -89,7 +89,7 @@ void declare() {
 	backgr_score.setColor(Color(255, 255, 255, 64));
 	backgr_score.setPosition(Vector2f(896, 0));
 
-	//Sonidos
+	//Sonidos sounds
 	dot.loadFromFile("img/dot.png");    
 	dotSprite.setTexture(dot);
 
