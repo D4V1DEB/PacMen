@@ -9,6 +9,8 @@
 #include "LostWin.h"
 #include <SFML/Window.hpp>
 #include <string>
+#include <vector>
+#include <algorithm>
 using namespace sf;
 using namespace std;
 
@@ -407,7 +409,113 @@ int pac_diffPOS(int Next_moving) {
 	return Next_tile;
 }
 
+//Patron observer
+
+// Interfaz Observer
+class Observer {
+public:
+    virtual void onNotify(int score) = 0;
+    virtual ~Observer() {}
+};
+
+// Clase Subject
+class Subject {
+private:
+    std::vector<Observer*> observers;
+public:
+    void addObserver(Observer* observer) {
+        observers.push_back(observer);
+    }
+
+    void removeObserver(Observer* observer) {
+        observers.erase(std::remove(observers.begin(), observers.end(), observer), observers.end());
+    }
+
+    void notify(int score) {
+        for (Observer* observer : observers) {
+            observer->onNotify(score);
+        }
+    }
+};
+
+// Clase Player
+class Player {
+private:
+    int score;
+    int lives;
+public:
+    Player() : score(0), lives(3) {}
+
+    void addScore(int points) {
+        score += points;
+    }
+
+    int getScore() const {
+        return score;
+    }
+
+    void addLife() {
+        lives++;
+    }
+
+    int getLives() const {
+        return lives;
+    }
+
+    void decreaseLife() {
+        lives--;
+    }
+
+    void resetLives() {
+        lives = 3;
+    }
+
+    bool isDead() const {
+        return lives <= 0;
+    }
+};
+
+
+// Clase LifeObserver
+class LifeObserver : public Observer {
+private:
+    Player* player;
+    int scoreThreshold;
+public:
+    LifeObserver(Player* player, int scoreThreshold) : player(player), scoreThreshold(scoreThreshold) {}
+
+    void onNotify(int score) override {
+        if (score >= scoreThreshold) {
+            player->addLife();
+            scoreThreshold += 10000; // Ajustar al siguiente umbral de puntaje
+        }
+    }
+};
+
+// Clase Game
+class Game : public Subject {
+private:
+    Player player;
+public:
+    Game() {}
+
+    void addScore(int points) {
+        player.addScore(points);
+        notify(player.getScore());
+    }
+
+    Player& getPlayer() {
+        return player;
+    }
+};
+
+
 void gamefn(int pacman_speed) {
+
+	Game game;
+    	Player& player = game.getPlayer();
+    	LifeObserver lifeObserver(&player, 2000); // Vida extra cada 2000 puntos
+    	game.addObserver(&lifeObserver);
 
 	Return_game_to_the_start();
 	RenderWindow pacman(VideoMode(1920, 1080), "Pacman");
@@ -426,56 +534,56 @@ void gamefn(int pacman_speed) {
 
 		if (pacSprite.getGlobalBounds().intersects(blinkySprite.getGlobalBounds())) {
 			if (!fright) {
-				lives--;
+				player.decreaseLife();
 				lost_win.soundlost();
 				Return_game_to_the_start();
 			} else {
 				blinkySprite.setPosition(Vector2f(384, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
-				score += 200;
+				game.addScore(200);
 				sleep(seconds(1));
 			}
 
 		} if (pacSprite.getGlobalBounds().intersects(pinkySprite.getGlobalBounds())) {
 			if (!fright) {
-				lives--;
+				player.decreaseLife();
 				lost_win.soundlost();
 				Return_game_to_the_start();
 			} else {
 				pinkySprite.setPosition(Vector2f(416, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
-				score += 200;
+				game.addScore(200);
 				sleep(seconds(1));
 			}
 		} if (pacSprite.getGlobalBounds().intersects(inkySprite.getGlobalBounds())) {
 			if (!fright) {
-				lives--;
+				player.decreaseLife();
 				lost_win.soundlost();
 				Return_game_to_the_start();
 			} else {
 				inkySprite.setPosition(Vector2f(448, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 					eatghost.play();
-				score += 200;
+				game.addScore(200);
 				sleep(seconds(1));
 			}
 		} if (pacSprite.getGlobalBounds().intersects(clydeSprite.getGlobalBounds())) {
 			if (!fright) {
-				lives--;
+				player.decreaseLife();
 				lost_win.soundlost();
 				Return_game_to_the_start();
 			} else {
 				clydeSprite.setPosition(Vector2f(480, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
 				eatghost.play();
-				score += 200;
+				game.addScore(200);
 				sleep(seconds(1));
 			}
 		}
 
-		if (!lives) {
+		if (player.isDead()) {
 			RenderWindow lost(VideoMode(1920, 1080), "Oops !");
 			lost_win.soundlost();
 			lost_win.lost(lost);
@@ -483,10 +591,9 @@ void gamefn(int pacman_speed) {
 			pacman.close();
 			sleep(seconds(3));
 			lost.close();
-			lives = 3;
-			map_path = "maps/map1.txt";
-			score = 0;
-			main();
+			player.resetLives();
+            		map_path = "maps/map1.txt";
+            		main();
 		}
 
 		cnt = (cnt + 1) % 21;
@@ -584,7 +691,7 @@ void gamefn(int pacman_speed) {
 					pacman.draw(dotSprite);
 					if (pacx == j && pacy == i) {
 						maze1[i][j] = 0;
-						score += 10; 
+						game.addScore(10);
 						if (eatdot.getStatus() == Music::Status::Stopped)
 							eatdot.play();
 					}
@@ -596,7 +703,7 @@ void gamefn(int pacman_speed) {
 					pacman.draw(bigdotSprite);
 					if (pacx == j && pacy == i) {
 						maze1[i][j] = 0, fright = 1000;
-						score += 50;  
+						game.addScore(50);  
 						if (eatbigdot.getStatus() == Music::Status::Stopped)
 							eatbigdot.play();
 					}
@@ -621,20 +728,10 @@ void gamefn(int pacman_speed) {
 				pacman.close();
 				sleep(seconds(3));
 				win.close();
-				lives = 3;
+				player.resetLives();
 				declare();
 
 			}
-		} if (score >= 2000 && Abnb_check1 == false) {  //vidas cada cierto puntaje
-			lives++;
-			lives = min(lives, 5);
-			Abnb_check1 = true;
-			extralive.play();
-		} if (score >= 4500 && Abnb_check2 == false) {
-			lives++;
-			lives = min(lives, 5);
-			Abnb_check2 = true;
-			extralive.play();
 		}
 
 		pacman.draw(blinkySprite);
@@ -650,16 +747,11 @@ void gamefn(int pacman_speed) {
 		pacman.draw(control2);
 		pacman.draw(control3);
 		pacman.draw(control4);
-		if (lives >= 1)
-			pacman.draw(lives_pacman_sprite1);
-		if (lives >= 2)
-			pacman.draw(lives_pacman_sprite2);
-		if (lives >= 3)
-			pacman.draw(lives_pacman_sprite3);
-		if (lives >= 4)
-			pacman.draw(lives_pacman_sprite4);
-		if (lives >= 5)
-			pacman.draw(lives_pacman_sprite5);
+		if (player.getLives() >= 1) pacman.draw(lives_pacman_sprite1);
+        	if (player.getLives() >= 2) pacman.draw(lives_pacman_sprite2);
+        	if (player.getLives() >= 3) pacman.draw(lives_pacman_sprite3);
+        	if (player.getLives() >= 4) pacman.draw(lives_pacman_sprite4);
+        	if (player.getLives() >= 5) pacman.draw(lives_pacman_sprite5);
 		pacman.display();
 		if (dead) {
 			startsound.play();
