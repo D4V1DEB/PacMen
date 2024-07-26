@@ -1,5 +1,5 @@
 # PacMen - Proyecto CC2
 Integrantes:
--Ronald Valdez Aguero
+-Ronald Valdez Agüero
 -David Espinoza Barrios
 -Jilmar Huaraca Quispe
