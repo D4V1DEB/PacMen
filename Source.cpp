@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
-
+#include <memory>
 #include "Menu.h"
 #include "ghostmoving.h"
 #include "ShortestRandom.h"
