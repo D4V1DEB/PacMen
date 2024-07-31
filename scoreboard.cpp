@@ -8,12 +8,19 @@
 #include <algorithm>
 #include <fstream>
 #include <functional>   
-#include <ostream>   
+#include <ostream>
+#include <thread>
 using namespace std;
 using namespace sf;
 
 
 scoreboard::scoreboard() {
+
+	thread loadThread(&scoreboard::Load_Score_Board, this);
+	loadThread.join();
+
+}
+void scoreboard::Load_Score_Board(){
 	scoreIn.open("Score/Score.txt");
 	
 	//--------- Score en el txt--------------------//
@@ -119,14 +126,21 @@ void scoreboard::Print_Score_Board(RenderWindow& window) {
 
 
 void scoreboard :: Save_Score_Board(int finale_score) {
-	scoreOut.open("Score/Score.txt");
-	Score[sentence] = max(finale_score, Score[sentence]);
 
-	scoreOut.clear();
-	it = Score.begin();
-	for (; it != Score.end(); it++) {
-		scoreOut << it->first << " " << it->second << " ";
-	}
-	scoreOut.close();
+	thread saveThread([=](){
+		scoreOut.open("Score/Score.txt");
+		Score[sentence] = max(finale_score, Score[sentence]);
+
+		scoreOut.clear();
+		it = Score.begin();
+		for (; it != Score.end(); it++) {
+			scoreOut << it->first << " " << it->second << " ";
+		}
+		scoreOut.close();
+	
+	});
+	
+	saveThread.join();
+	
 
 }
