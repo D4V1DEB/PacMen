@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
+#include <memory>
 #include "Menu.h"
 #include "ghostmoving.h"
 #include "ShortestRandom.h"
@@ -511,27 +512,27 @@ public:
 
 
 void gamefn(int pacman_speed) {
-
 	Game game;
-    	Player& player = game.getPlayer();
-    	LifeObserver lifeObserver(&player, 2000); // Vida extra cada 2000 puntos
-    	game.addObserver(&lifeObserver);
-
+	Player& player = game.getPlayer();
+	LifeObserver lifeObserver(&player, 2000); // Vida extra cada 2000 puntos
+	game.addObserver(&lifeObserver);
+	
 	Return_game_to_the_start();
 	RenderWindow pacman(VideoMode(1920, 1080), "Pacman");
-
-
-
-	ghostmoving blinky(maze1, cols, rows, 2);
-	ShortestRandom pinky(maze1, cols, rows, 2);
-	Besh_Random inky, clyde;
-	Inky_Ghost ink; 
+	
+	unique_ptr<ghostmoving> blinky = make_unique<ghostmoving>(maze1, cols, rows, 2);
+	unique_ptr<ShortestRandom> pinky = make_unique<ShortestRandom>(maze1, cols, rows, 2);
+	unique_ptr<Besh_Random> inky = make_unique<Besh_Random>();
+	unique_ptr<Besh_Random> clyde = make_unique<Besh_Random>();
+	unique_ptr<Inky_Ghost> ink = make_unique<Inky_Ghost>();
+	
 	int xx = 0, yy = 0;
-
-	bool move_ch = 1; int Besh_x = 0, Besh_y = 0 ;
+	bool move_ch = 1; 
+	int Besh_x = 0, Besh_y = 0;
+	
 	while (pacman.isOpen()) {
 		score_board.Save_Score_Board(score);
-
+		
 		if (pacSprite.getGlobalBounds().intersects(blinkySprite.getGlobalBounds())) {
 			if (!fright) {
 				player.decreaseLife();
@@ -544,8 +545,8 @@ void gamefn(int pacman_speed) {
 				game.addScore(200);
 				sleep(seconds(1));
 			}
-
-		} if (pacSprite.getGlobalBounds().intersects(pinkySprite.getGlobalBounds())) {
+		} 
+		if (pacSprite.getGlobalBounds().intersects(pinkySprite.getGlobalBounds())) {
 			if (!fright) {
 				player.decreaseLife();
 				lost_win.soundlost();
@@ -557,7 +558,8 @@ void gamefn(int pacman_speed) {
 				game.addScore(200);
 				sleep(seconds(1));
 			}
-		} if (pacSprite.getGlobalBounds().intersects(inkySprite.getGlobalBounds())) {
+		} 
+		if (pacSprite.getGlobalBounds().intersects(inkySprite.getGlobalBounds())) {
 			if (!fright) {
 				player.decreaseLife();
 				lost_win.soundlost();
@@ -569,7 +571,8 @@ void gamefn(int pacman_speed) {
 				game.addScore(200);
 				sleep(seconds(1));
 			}
-		} if (pacSprite.getGlobalBounds().intersects(clydeSprite.getGlobalBounds())) {
+		} 
+		if (pacSprite.getGlobalBounds().intersects(clydeSprite.getGlobalBounds())) {
 			if (!fright) {
 				player.decreaseLife();
 				lost_win.soundlost();
@@ -577,12 +580,12 @@ void gamefn(int pacman_speed) {
 			} else {
 				clydeSprite.setPosition(Vector2f(480, 416));
 				if (eatghost.getStatus() == Music::Status::Stopped)
-				eatghost.play();
+					eatghost.play();
 				game.addScore(200);
 				sleep(seconds(1));
 			}
 		}
-
+		
 		if (player.isDead()) {
 			RenderWindow lost(VideoMode(1920, 1080), "Oops !");
 			lost_win.soundlost();
@@ -592,15 +595,15 @@ void gamefn(int pacman_speed) {
 			sleep(seconds(3));
 			lost.close();
 			player.resetLives();
-            		map_path = "maps/map1.txt";
-            		main();
+			map_path = "maps/map1.txt";
+			main();
 		}
-
+		
 		cnt = (cnt + 1) % 21;
-
-		s = to_string(score);
+		
+		s = std::to_string(score);
 		text.setString(s);
-
+		
 		Event event;
 		while (pacman.pollEvent(event)) {
 			if (event.type == Event::Closed) {
@@ -615,8 +618,7 @@ void gamefn(int pacman_speed) {
 				yy = -pacman_speed, xx = 0;
 			if (Keyboard::isKeyPressed(Keyboard::Down))
 				yy = pacman_speed, xx = 0;
-			if (Keyboard::isKeyPressed(Keyboard::Escape))
-			{
+			if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				pacman.close();
 				main();
 			}
@@ -627,63 +629,52 @@ void gamefn(int pacman_speed) {
 				move_ch = 0;
 			}
 		}
+		
 		playeranimation(Dir, cnt);
-
+		
 		int y = (pacSprite.getPosition().x + pac_diffPOS(xx)) / 32;
 		int x = (pacSprite.getPosition().y + pac_diffPOS(yy)) / 32;
-
+		
 		int Besh_gety = (pacSprite.getPosition().x + pac_diffPOS(Besh_x)) / 32;
 		int Besh_getx = (pacSprite.getPosition().y + pac_diffPOS(Besh_y)) / 32;
-
+		
 		int xmod = pacSprite.getPosition().y, ymod = pacSprite.getPosition().x;
-
-
+		
 		if (!(xmod % 32) && !(ymod % 32)) {
-
 			if (maze1[x][y] != 1) {
 				pacSprite.move(xx, yy), Besh_x = xx, Besh_y = yy;
 				detectdirection(xx, yy);
-			}
-
-
-			else if (maze1[Besh_getx][Besh_gety] != 1) {
-
+			} else if (maze1[Besh_getx][Besh_gety] != 1) {
 				pacSprite.move(Besh_x, Besh_y);
-
 				detectdirection(Besh_x, Besh_y);
+			} else {
+				pacSprite.move(0, 0);
+				xx = yy = 0;
 			}
-
-			else {
-				
-				{
-					pacSprite.move(0, 0);
-					xx = yy = 0;
-				}
-			}
+		} else {
+			pacSprite.move(Besh_x, Besh_y);
 		}
-
-		else pacSprite.move(Besh_x, Besh_y);
+		
 		pacman.clear();
-
+		
 		if (fright != 0)
 			fright--;
 		frightmode(fright);
-		blinkySprite = blinky.findpath(pacSprite, blinkySprite);
-		pinky.short_with_tiles(pacSprite, pinkySprite);
-		ink.Inky(inkySprite, 2);
-		clyde.pinky_ran_move(clydeSprite, maze1, 2);
-
-
+		
+		blinkySprite = blinky->findpath(pacSprite, blinkySprite);
+		pinky->short_with_tiles(pacSprite, pinkySprite);
+		ink->Inky(inkySprite, 2);
+		clyde->pinky_ran_move(clydeSprite, maze1, 2);
+		
 		win = true;
-		for (int i = 0; i < rows; i++)
+		for (int i = 0; i < rows; i++) {
 			for (int j = 0; j < cols; j++) {
 				int pacx = pacSprite.getPosition().x / 32, pacy = pacSprite.getPosition().y / 32;
 				if (maze1[i][j] == 1) {
 					wallSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					wallSprite.setPosition(j * 32, i * 32);
 					pacman.draw(wallSprite);
-				}
-				else if (maze1[i][j] == 2) {
+				} else if (maze1[i][j] == 2) {
 					win = false;
 					dotSprite.setTextureRect(IntRect(0, 0, 16, 16));
 					dotSprite.setColor(Color::Red);
@@ -695,8 +686,7 @@ void gamefn(int pacman_speed) {
 						if (eatdot.getStatus() == Music::Status::Stopped)
 							eatdot.play();
 					}
-				}
-				else if (maze1[i][j] == 3) {
+				} else if (maze1[i][j] == 3) {
 					win = false;
 					bigdotSprite.setTextureRect(IntRect(0, 0, 32, 32));
 					bigdotSprite.setPosition(j * 32, i * 32);
@@ -708,18 +698,17 @@ void gamefn(int pacman_speed) {
 							eatbigdot.play();
 					}
 				}
-
 			}
-
-		if (win==true) {
+		}
+		
+		if (win == true) {
 			sleep(seconds(1));
-
+			
 			if (map_path[8] < '3') {
 				map_path[8]++;
 				declare();
 				pacman.close();
 				gamefn(2);
-				
 			} else {
 				RenderWindow win(VideoMode(1920, 1080), "Felicitaciones !");
 				lost_win.winningsound();
@@ -730,10 +719,9 @@ void gamefn(int pacman_speed) {
 				win.close();
 				player.resetLives();
 				declare();
-
 			}
 		}
-
+		
 		pacman.draw(blinkySprite);
 		pacman.draw(pinkySprite);
 		pacman.draw(inkySprite);
@@ -748,10 +736,10 @@ void gamefn(int pacman_speed) {
 		pacman.draw(control3);
 		pacman.draw(control4);
 		if (player.getLives() >= 1) pacman.draw(lives_pacman_sprite1);
-        	if (player.getLives() >= 2) pacman.draw(lives_pacman_sprite2);
-        	if (player.getLives() >= 3) pacman.draw(lives_pacman_sprite3);
-        	if (player.getLives() >= 4) pacman.draw(lives_pacman_sprite4);
-        	if (player.getLives() >= 5) pacman.draw(lives_pacman_sprite5);
+		if (player.getLives() >= 2) pacman.draw(lives_pacman_sprite2);
+		if (player.getLives() >= 3) pacman.draw(lives_pacman_sprite3);
+		if (player.getLives() >= 4) pacman.draw(lives_pacman_sprite4);
+		if (player.getLives() >= 5) pacman.draw(lives_pacman_sprite5);
 		pacman.display();
 		if (dead) {
 			startsound.play();
