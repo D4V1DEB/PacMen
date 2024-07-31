@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <thread>
 #include "Menu.h"
 #include "ghostmoving.h"
 #include "ShortestRandom.h"
@@ -512,10 +513,15 @@ public:
 
 
 void gamefn(int pacman_speed) {
-	Game game;
+	static Game game;
 	Player& player = game.getPlayer();
 	LifeObserver lifeObserver(&player, 2000); // Vida extra cada 2000 puntos
-	game.addObserver(&lifeObserver);
+	static bool observerAdded = false;
+	if(!observerAdded){
+		game.addObserver(&lifeObserver);
+		observerAdded = true;
+	}
+	
 	
 	Return_game_to_the_start();
 	RenderWindow pacman(VideoMode(1920, 1080), "Pacman");
@@ -601,7 +607,7 @@ void gamefn(int pacman_speed) {
 		
 		cnt = (cnt + 1) % 21;
 		
-		s = std::to_string(score);
+		s = to_string(player.getScore());
 		text.setString(s);
 		
 		Event event;
@@ -750,24 +756,48 @@ void gamefn(int pacman_speed) {
 }
 
 void scoreBoardfn() {
-	RenderWindow Score_Screen(sf::VideoMode(1920, 1080), "Score");
+	RenderWindow Score_Screen(VideoMode(1920, 1080), "Score");
 	scoreboard sb;
+	
 	while (Score_Screen.isOpen()) {
 		Event event;
 		while (Score_Screen.pollEvent(event)) {
-			if (event.type == Event::Closed)
+			if (event.type == Event::Closed) {
 				Score_Screen.close();
-
-			else if (event.text.unicode == 27) { //Esc Salir
+			} else if (event.text.unicode == 27) { // Esc para salir
 				Score_Screen.close();
 				startfn();
 				break;
 			}
 		}
+		
 		Score_Screen.clear();
+		
 		sb.Print_Score_Board(Score_Screen);
+		
 		Score_Screen.display();
 	}
+}
+
+void cargarMapa(int drawmaze[50][50]){
+	fstream inputStream;
+	inputStream.open("maps/drawurmaze.txt");
+	for (int i = 0; i < rows; i++)
+		for (int j = 0; j < cols; j++)
+			inputStream >> drawmaze[i][j];
+}
+
+void guardarMapa(int drawmaze[50][50]){
+	ofstream outfile;
+	outfile.open("filename.txt", ios::out);
+	outfile.clear();
+	for (int i=0; i<rows; i++){
+		for (int j = 0; j < cols; j++)
+			outfile << drawmaze[i][j]<<" ";
+		outfile<<"\n";
+	}
+	outfile.close();
+	cout<<"done";
 }
 
 void draw_your_maze() {
@@ -775,11 +805,8 @@ void draw_your_maze() {
 	sf::RenderWindow window(sf::VideoMode(1920, 1080), "Dibuja tu mapa");
 
 	int drawmaze[50][50] = {};
-	fstream inputStream;
-	inputStream.open("maps/drawurmaze.txt");
-	for (int i = 0; i < rows; i++)
-		for (int j = 0; j < cols; j++)
-			inputStream >> drawmaze[i][j];
+	thread cargarHilo(cargarMapa, drawmaze);
+	cargarHilo.join();
 
 	Texture textur;
 	textur.loadFromFile("img/drawurmaze.png");
@@ -792,16 +819,8 @@ void draw_your_maze() {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			if (Keyboard::isKeyPressed(Keyboard::P)) {
-				ofstream outfile;
-				outfile.open("filename.txt", ios::out);
-				outfile.clear();
-				for (int i = 0; i < rows; i++) {
-					for (int j = 0; j < cols; j++)
-						outfile << drawmaze[i][j] << " ";
-					outfile << "\n";
-				}
-				outfile.close();
-				cout << "done";
+				thread guardarHilo(guardarMapa, drawmaze);
+				guardarHilo.join();
 			} if (Keyboard::isKeyPressed(Keyboard::Escape)) {
 				window.close();
 				startfn();
