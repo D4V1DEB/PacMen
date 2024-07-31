@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <fstream>
+#include <thread>
+#include <map>
 using namespace std;
 using namespace sf;
 class scoreboard {
@@ -14,7 +16,9 @@ public:
 
 	void Print_Score_Board(RenderWindow& window);
 
-	void  Save_Score_Board(int finale_score);
+	void Save_Score_Board(int finale_score);
+
+	void Load_Score_Board();
 
 public:
 	Text User_Input, User_Name;
